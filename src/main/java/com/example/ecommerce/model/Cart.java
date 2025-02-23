@@ -1,44 +1,37 @@
 package com.example.ecommerce.model;
 
-import jakarta.persistence.Entity;
-
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Table(name = "cart")
+@Getter
+@Setter
 public class Cart {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    private Long userId;  
-    
-    private List<Product> items;  
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  @JsonBackReference("cart-reference")
+  private User user;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  @OneToMany(mappedBy = "cart")
+  @JsonManagedReference("cart-item-reference")
+  private List<CartItem> cartItems;
 
-    public Long getUserId() {
-        return userId;
+  public Double getTotalPrice() {
+    double totalPrice = 0.0;
+    for (CartItem item : cartItems) {
+      totalPrice += item.getTotalPrice();
     }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public List<Product> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Product> items) {
-        this.items = items;
-    }
+    return totalPrice;
+  }
 }

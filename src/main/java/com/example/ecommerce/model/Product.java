@@ -1,83 +1,43 @@
 package com.example.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-
+@Table(name = "product")
 public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long productId;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(nullable = false)
-    private Double price;
+  @Column(nullable = false)
+  private Double price;
 
-    @Column(nullable = false)
-    private String description;
+  @Column(nullable = false)
+  private String description;
 
-    @Column(nullable = false)
-    private Integer quantity;
+  @Column(nullable = false)
+  private Integer quantity;
 
-    @ManyToOne(optional = false)
-    private ProductCategory category;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "category_id")
+  @JsonBackReference("product-reference")
+  private Category category;
 
-	public Long getProductId() {
-		return productId;
-	}
+  @ManyToMany(mappedBy = "products")
+  private List<Order> orders;
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
-	public ProductCategory getCategory() {
-		return category;
-	}
-
-	public void setCategory(ProductCategory category) {
-		this.category = category;
-	}
-    
-    
+  @OneToMany(mappedBy = "product")
+  @JsonManagedReference("product-cart-item-reference")
+  private List<CartItem> cartItems;
 }
 

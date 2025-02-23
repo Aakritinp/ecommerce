@@ -1,99 +1,73 @@
 package com.example.ecommerce.model;
 
-
 import com.example.ecommerce.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "user")
+@NoArgsConstructor
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long userId;
 
-    @Column(nullable = false)
-    private String username;
+  @Column(nullable = false)
+  private String username;
 
+  @Column(nullable = false)
+  private Roles role;
 
-    @Column(nullable = false)
-    private Roles role;
+  @Column(nullable = false, unique = true)
+  private String email;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+  @Column(nullable = false)
+  private String phone;
 
-    @Column(nullable = false)
-    private String phone;
+  @Column(nullable = false)
+  private String password;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String shippingAddress;
 
-    public String getName() {
-        return name;
-    }
+  @Column(nullable = false)
+  private String billingAddress;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(nullable = false)
+  private String cardNumber;
 
-    public Long getUserId() {
-        return userId;
-    }
+  @Column(nullable = false)
+  private String expirationDate;
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  @Column(nullable = false)
+  private String billingName;
 
-    public String getUsername() {
-        return username;
-    }
+  @Column(nullable = false)
+  private String billingPhone;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  @OneToMany(mappedBy = "user")
+  @JsonManagedReference("user-order-reference")
+  private List<Order> orders;
 
-    public Roles getRole() {
-        return role;
-    }
+  @OneToOne(mappedBy = "user")
+  @JsonManagedReference("cart-reference")
+  private Cart cart;
 
-    public void setRole(Roles role) {
-        this.role = role;
-    }
+  @OneToMany(mappedBy = "user")
+  @JsonManagedReference("user-payment-reference")
+  private List<Payment> payments;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-
+  public User(Long userId) {
+    this.userId = userId;
+  }
 }
-
-
