@@ -29,7 +29,7 @@ public class UserController {
       return ResponseEntity.badRequest().body("User already exists");
     }
 
-    return ResponseEntity.ok("User registered successfully");
+    return ResponseEntity.ok("User registered successfully with id: " + user.getUserId());
   }
 
   /**
@@ -41,6 +41,7 @@ public class UserController {
    */
   @PostMapping("/login")
   public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
+
     User user = userService.loginUser(username, password);
     if (user == null) {
       return ResponseEntity.badRequest().body("Invalid username or password");
